@@ -1,0 +1,45 @@
+name: "predeploy | frontend"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'lab5/frontend/**'
+
+jobs:
+  dockerfile-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+  
+      - name: execute verify
+        run: |
+          echo "::group::🔍 Starting Dockerfile validation"
+          GREEN=$'\033[0;32m'
+          RESET=$'\033[0m' 
+
+          DOCKERFILE_PATH="lab5/frontend/Dockerfile"
+          
+          if [ ! -f "$DOCKERFILE_PATH" ]; then
+            echo "::error::🚨 Dockerfile not found at: $DOCKERFILE_PATH"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "✅ Dockerfile exists"
+          echo "📄 File content preview:"
+          head -n 5 "$DOCKERFILE_PATH"
+          
+          # Проверка базового образа
+          if ! grep -q '^FROM' "$DOCKERFILE_PATH"; then
+            echo "::error::🚫 Missing FROM instruction in Dockerfile"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "🔄 Trying to build test image..."
+          docker build -t test-image "$(dirname "$DOCKERFILE_PATH")"
+          
+          echo "::endgroup::"
+          echo -e "$🎉${GREEN}All checks passed! You're ready to go${RESET}🚀"
