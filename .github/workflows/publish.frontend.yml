@@ -1,8 +1,8 @@
-name: publish-frontend
+name: "publish | frontend"
 
 on:
   workflow_run:
-    workflows: [predeploy-frontend]
+    workflows: ["predeploy | frontend"]
     types: 
       - completed
 

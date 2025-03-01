@@ -1,9 +1,9 @@
-name: publish-backend
+name: "publish | backend"
 
 on:
   workflow_run:
-    workflows: [predeploy-backend]
-    types:  
+    workflows: ["predeploy | backend"]
+    types:
       - completed
 
 env:

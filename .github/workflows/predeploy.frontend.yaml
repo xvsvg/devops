@@ -1,4 +1,4 @@
-name: predeploy-frontend
+name: "predeploy | frontend"
 
 on:
   pull_request:
