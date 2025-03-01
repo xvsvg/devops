@@ -7,7 +7,7 @@ on:
       - "lab5/frontend/**"
 
 jobs:
-  frontend:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
