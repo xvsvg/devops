@@ -102,6 +102,9 @@ jobs:
   publish:
     needs: [build, dockerfile-check]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     
     steps:
       - name: checkout
