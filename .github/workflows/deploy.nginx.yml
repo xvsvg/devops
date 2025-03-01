@@ -41,7 +41,6 @@ jobs:
       
       - name: redeploy
         run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.environment-set.outputs.branch }}
           export CONTROLLER_CONTAINER_NAME=nginx
           export CONTROLLER_EXTERNAL_PORT=80
           export CONTROLLER_IMAGE_NAME=${{ env.IMAGE_NAME }}
