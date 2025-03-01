@@ -1,9 +1,4 @@
 FROM gradle:7.6.1-jdk17-alpine AS build
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /app
-USER appuser
-
 WORKDIR /home/gradle/src
 
 COPY build.gradle.kts settings.gradle.kts gradlew.bat ./
