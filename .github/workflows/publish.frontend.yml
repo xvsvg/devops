@@ -1,13 +1,10 @@
-name: create-image-frontend
+name: publish-frontend
 
 on:
-  workflow_dispatch:
   workflow_run:
-    workflows: ["predeploy-frontend"]
+    workflows: [predeploy-frontend]
     types: 
       - completed
-    branches: 
-      - master
 
 env:
   REGISTRY: ghcr.io

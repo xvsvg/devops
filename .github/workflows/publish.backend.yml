@@ -1,13 +1,10 @@
-name: create-image-backend
+name: publish-backend
 
 on:
-  workflow_dispatch:
   workflow_run:
-    workflows: ["predeploy-backend"]
-    types: 
+    workflows: [predeploy-backend]
+    types:  
       - completed
-    branches:
-      - master
 
 env:
   REGISTRY: ghcr.io
