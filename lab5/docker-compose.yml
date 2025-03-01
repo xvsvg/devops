@@ -36,8 +36,10 @@ services:
   proxy:
     container_name: ${CONTROLLER_CONTAINER_NAME}
     image: ${CONTROLLER_IMAGE_NAME}
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - ${CONTROLLER_EXTERNAL_PORT}:8080
-    depends_on: [frontend, backend]
