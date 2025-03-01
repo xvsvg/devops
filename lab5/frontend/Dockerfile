@@ -17,7 +17,6 @@ RUN npm run build
 FROM node:18.6.0-alpine AS final
 WORKDIR /frontend
 
-# Копируем собранный проект из этапа build
 COPY --from=build /frontend /frontend
 
 ENV NODE_ENV=production
