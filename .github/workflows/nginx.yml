@@ -1,9 +1,9 @@
-name: "deploy | nginx"
+name: "nginx"
 
 on:
   pull_request:
     branches: [master]
-    paths:
+    paths:	
       - 'lab5/nginx.conf'
 
 env:
@@ -23,6 +23,9 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
   deploy:
+    defaults:
+      run:
+        working-directory: ${{ env.WORKDIR }}
     runs-on: [ self-hosted, Linux, X64 ]
     needs: [environment-set]
     steps:

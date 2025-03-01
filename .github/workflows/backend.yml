@@ -1,4 +1,4 @@
-name: "predeploy | backend"
+name: "backend"
 
 on:
   pull_request:
