@@ -1,4 +1,9 @@
 FROM node:18.6.0-alpine AS build
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
+USER appuser
+
 WORKDIR /frontend
 
 COPY package.json package-lock.json ./
