@@ -1,10 +1,12 @@
-name: "publish | frontend"
+name: "deploy | frontend"
 
 on:
   workflow_run:
     workflows: ["predeploy | frontend"]
     types: 
       - completed
+    branches: [master]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
