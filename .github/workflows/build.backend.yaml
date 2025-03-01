@@ -32,4 +32,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties', '**/build.gradle') }}
       
       - name: build & test
-        run: ./gradlew clean build test
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build test
