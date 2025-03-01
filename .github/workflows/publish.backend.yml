@@ -1,9 +1,9 @@
-name: create image | backend
+name: create-image-backend
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["predeploy | backend"]
+    workflows: ["predeploy-backend"]
     types: 
       - completed
     branches:

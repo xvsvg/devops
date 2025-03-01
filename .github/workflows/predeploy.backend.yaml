@@ -1,4 +1,4 @@
-name: predeploy | backend
+name: predeploy-backend
 
 on:
   pull_request:
@@ -33,19 +33,49 @@ jobs:
       
       - name: build & test
         run: |
+          echo Starting build...
+          START = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
           chmod +x gradlew
           ./gradlew clean build test
+
+          END = = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          ELAPSED = $(( $END - $START ))
+
+          GREEN=\033[0;32m
+          echo -e "${GREEN}Build Succeeded within $ELAPSED"
 
   dockerfile-check:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      
-      - name: execute check
-        run: | 
-          (ls lab5/backend/Dockerfile >> /dev/null 2>&1 &&
-            echo check completed successfully &&
-            echo you are ready to go 🚀) ||
-          echo 'Dockerfile' must present at lab5/backend path && exit 1
-    
+  
+      - name: execute verify
+        run: |
+          echo "::group::🔍 Starting Dockerfile validation"
+          GREEN=\033[0;32m
+
+          DOCKERFILE_PATH="lab5/backend/Dockerfile"
+          
+          if [ ! -f "$DOCKERFILE_PATH" ]; then
+            echo "::error::🚨 Dockerfile not found at: $DOCKERFILE_PATH"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "✅ Dockerfile exists"
+          echo "📄 File content preview:"
+          head -n 5 "$DOCKERFILE_PATH"
+          
+          if ! grep -q '^FROM' "$DOCKERFILE_PATH"; then
+            echo "::error::🚫 Missing FROM instruction in Dockerfile"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "🔄 Trying to build test image..."
+          docker build -t test-image "$(dirname "$DOCKERFILE_PATH")"
+          
+          echo "::endgroup::"
+          echo -e "$🎉 ${GREEN}All checks passed! You're ready to go 🚀"

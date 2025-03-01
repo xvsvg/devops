@@ -1,4 +1,4 @@
-name: predeploy | frontend
+name: predeploy-frontend
 
 on:
   pull_request:
@@ -29,7 +29,17 @@ jobs:
           key: node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install and Test
-        run: npm ci && npm run build && npm test
+        run: |
+          echo Starting build...
+          START = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+          npm ci && npm run build && npm test
+
+          END = = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          ELAPSED = $(( $END - $START ))
+
+          GREEN=\033[0;32m
+          echo -e "${GREEN}Build Succeeded within $ELAPSED"
         continue-on-error: true
 
   dockerfile-check:
@@ -37,10 +47,33 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      
-      - name: execute check
-        run: | 
-          (ls lab5/frontend/Dockerfile >> /dev/null 2>&1 &&
-            echo check completed successfully &&
-            echo you are ready to go 🚀) ||
-          echo 'Dockerfile' must present at lab5/frontend path && exit 1
+  
+      - name: execute verify
+        run: |
+          echo "::group::🔍 Starting Dockerfile validation"
+          GREEN=\033[0;32m
+
+          DOCKERFILE_PATH="lab5/frontend/Dockerfile"
+          
+          if [ ! -f "$DOCKERFILE_PATH" ]; then
+            echo "::error::🚨 Dockerfile not found at: $DOCKERFILE_PATH"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "✅ Dockerfile exists"
+          echo "📄 File content preview:"
+          head -n 5 "$DOCKERFILE_PATH"
+          
+          # Проверка базового образа
+          if ! grep -q '^FROM' "$DOCKERFILE_PATH"; then
+            echo "::error::🚫 Missing FROM instruction in Dockerfile"
+            echo "::endgroup::"
+            exit 1
+          fi
+  
+          echo "🔄 Trying to build test image..."
+          docker build -t test-image "$(dirname "$DOCKERFILE_PATH")"
+          
+          echo "::endgroup::"
+          echo -e "$🎉 ${GREEN}All checks passed! You're ready to go 🚀"
