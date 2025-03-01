@@ -34,13 +34,13 @@ jobs:
       - name: build & test
         run: |
           echo Starting build...
-          START = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          START=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
           chmod +x gradlew
           ./gradlew clean build test
 
-          END = = $(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          ELAPSED = $(( $END - $START ))
+          END=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          ELAPSED=$(( $END - $START ))
 
           GREEN=\033[0;32m
           echo -e "${GREEN}Build Succeeded within $ELAPSED"
@@ -55,6 +55,7 @@ jobs:
         run: |
           echo "::group::🔍 Starting Dockerfile validation"
           GREEN=\033[0;32m
+          RESET='\033[0m
 
           DOCKERFILE_PATH="lab5/backend/Dockerfile"
           
@@ -78,4 +79,4 @@ jobs:
           docker build -t test-image "$(dirname "$DOCKERFILE_PATH")"
           
           echo "::endgroup::"
-          echo -e "$🎉 ${GREEN}All checks passed! You're ready to go 🚀"
+          echo -e "$🎉${GREEN}All checks passed! You're ready to go${RESET}🚀"
