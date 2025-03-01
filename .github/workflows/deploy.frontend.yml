@@ -1,15 +1,16 @@
-name: create image | backend
+name: "deploy | frontend"
 
 on:
   workflow_run:
-    workflows: ["build | backend"]
-    types:
+    workflows: ["predeploy | frontend"]
+    types: 
       - completed
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{github.repository}}-backend
-  WORKDIR: lab5/backend
+  IMAGE_NAME: ${{github.repository}}-frontend
+  WORKDIR: lab5/frontend
 
 jobs:
   check-build-status:
