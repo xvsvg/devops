@@ -3,8 +3,8 @@ name: create image | backend
 on:
   workflow_run:
     workflows: ["build | backend"]
-    types:
-      - completed
+    types: [completed]
+    branches: [master]
 
 env:
   REGISTRY: ghcr.io

@@ -3,8 +3,8 @@ name: create image | frontend
 on:
   workflow_run:
     workflows: ["build | frontend"]
-    types:
-      - completed
+    types: [completed]
+    branches: [master]
 
 env:
   REGISTRY: ghcr.io
@@ -15,7 +15,7 @@ jobs:
   check-build-status:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Build Success
+      - name: verify build success
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
