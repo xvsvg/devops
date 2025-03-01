@@ -1,4 +1,4 @@
-name: build | frontend
+name: predeploy | frontend
 
 on:
   pull_request:
@@ -31,3 +31,16 @@ jobs:
       - name: Install and Test
         run: npm ci && npm run build && npm test
         continue-on-error: true
+
+  dockerfile-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      
+      - name: execute check
+        run: | 
+          (ls lab5/frontend/Dockerfile >> /dev/null 2>&1 &&
+            echo check completed successfully &&
+            echo you are ready to go 🚀) ||
+          echo 'Dockerfile' must present at lab5/frontend path && exit 1

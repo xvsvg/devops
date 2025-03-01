@@ -1,4 +1,4 @@
-name: build | backend
+name: predeploy | backend
 
 on:
   pull_request:
@@ -35,3 +35,17 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew clean build test
+
+  dockerfile-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      
+      - name: execute check
+        run: | 
+          (ls lab5/backend/Dockerfile >> /dev/null 2>&1 &&
+            echo check completed successfully &&
+            echo you are ready to go 🚀) ||
+          echo 'Dockerfile' must present at lab5/backend path && exit 1
+    

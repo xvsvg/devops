@@ -1,10 +1,13 @@
 name: create image | frontend
 
 on:
+  workflow_dispatch:
   workflow_run:
-    workflows: ["build | frontend"]
-    types: [completed]
-    branches: [master]
+    workflows: ["predeploy | frontend"]
+    types: 
+      - completed
+    branches: 
+      - master
 
 env:
   REGISTRY: ghcr.io
