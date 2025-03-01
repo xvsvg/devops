@@ -42,9 +42,9 @@ jobs:
           END=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           ELAPSED=$(( $END - $START ))
 
-          GREEN=\033[0;32m
-          echo -e "${GREEN}Build Succeeded within $ELAPSED"
-
+          GREEN=$'\033[0;32m'
+          RESET=$'\033[0m' 
+          echo -e "${GREEN}Build Succeeded within ${ELAPSED}${RESET}"
   dockerfile-check:
     runs-on: ubuntu-latest
     steps:
@@ -54,8 +54,8 @@ jobs:
       - name: execute verify
         run: |
           echo "::group::🔍 Starting Dockerfile validation"
-          GREEN=\033[0;32m
-          RESET='\033[0m
+          GREEN=$'\033[0;32m'
+          RESET=$'\033[0m'
 
           DOCKERFILE_PATH="lab5/backend/Dockerfile"
           
