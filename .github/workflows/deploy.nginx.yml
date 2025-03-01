@@ -57,7 +57,7 @@ jobs:
 
   deploy:
     runs-on: [ self-hosted, Linux, X64 ]
-    needs: [environment-set]
+    needs: [environment-set, publish]
     steps:
 
       - uses: actions/checkout@v2
