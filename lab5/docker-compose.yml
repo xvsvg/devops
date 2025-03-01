@@ -35,7 +35,6 @@ services:
 
   proxy:
     container_name: ${CONTROLLER_CONTAINER_NAME}
-    image: ${CONTROLLER_IMAGE_NAME}
     build:
       context: ./nginx
       dockerfile: Dockerfile
