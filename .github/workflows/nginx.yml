@@ -1,0 +1,50 @@
+name: "nginx"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:	
+      - 'lab5/nginx.conf'
+
+env:
+  WORKDIR: lab5/
+
+jobs:
+  environment-set:
+    outputs:
+      branch: ${{ steps.extract-branch.outputs.branch }}
+    runs-on: ubuntu-latest
+    name: environment-set
+    steps:
+
+      - name: extract-branch
+        shell: bash
+        id: extract-branch
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+  deploy:
+    defaults:
+      run:
+        working-directory: ${{ env.WORKDIR }}
+    runs-on: [ self-hosted, Linux, X64 ]
+    needs: [environment-set]
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          clean: false
+          sparse-checkout: ${{ env.WORKDIR }}
+      
+      - name: remove previous version
+        continue-on-error: true
+        run: |
+          docker stop nginx || true
+          docker rm nginx || true
+      
+      - name: redeploy
+        run: |
+          export CONTROLLER_CONTAINER_NAME=nginx
+          export CONTROLLER_EXTERNAL_PORT=80
+          export CONTROLLER_IMAGE_NAME=nginx:mainline
+
+          docker compose up -d --build --force-recreate proxy
