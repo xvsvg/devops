@@ -99,7 +99,7 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
   publish:
-    needs: [build, dockerfile-check, environment-set]
+    needs: [build, dockerfile-check]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -123,7 +123,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.environment-set.outputs.branch }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         
       - name: publish
         uses: docker/build-push-action@v4
