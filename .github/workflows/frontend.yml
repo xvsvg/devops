@@ -96,7 +96,7 @@ jobs:
       - name: extract-branch
         shell: bash
         id: extract-branch
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        run: echo "branch=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
 
   publish:
     needs: [build, dockerfile-check]
@@ -123,7 +123,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}`
         
       - name: publish
         uses: docker/build-push-action@v4
@@ -154,11 +154,11 @@ jobs:
       
       - name: redeploy
         run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.environment-set.outputs.branch }}
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ needs.environment-set.outputs.branch }}
           docker run \
             --name meow-client \
             -p 3000:3000 \
             -d \
             -t \
             --restart=unless-stopped \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.environment-set.outputs.branch }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ needs.environment-set.outputs.branch }}
